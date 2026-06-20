@@ -1,6 +1,6 @@
 import { auth } from "@/lib/auth";
 import { Bars } from "@gravity-ui/icons";
-import { Button, Drawer } from "@heroui/react";
+import { Button } from "@heroui/react";
 import {
     ChartArea,
     User2,
@@ -19,7 +19,6 @@ export default async function DashboardSidebar() {
     });
 
     const user = session?.user;
-
     const role = user?.role || "client";
 
     const dashboardItems = {
@@ -43,105 +42,59 @@ export default async function DashboardSidebar() {
     const navItems = dashboardItems[role] || [];
 
     return (
-        <Drawer>
-            {/* Mobile Trigger */}
-            <Button className="md:hidden" variant="secondary">
+        <>
+            {/* 📱 মোবাইল ট্রিগার বাটন (ডেক্সটপে হাইড থাকবে) */}
+            <Button className="md:hidden fixed top-3 left-4 z-50 bg-zinc-900 border border-zinc-800 text-zinc-200" variant="secondary" size="sm">
                 <Bars />
                 Menu
             </Button>
 
-            {/* Sidebar */}
-            <nav className="hidden md:flex flex-col w-[260px] h-screen border-r bg-white">
+            {/* 🟢 🖥️ ডেক্সটপ সাইডবার (সরাসরি ডমে দৃশ্যমান থাকবে, কোনো ড্রয়ার ব্লকিং ছাড়া) */}
+            <nav className="hidden md:flex flex-col w-[260px] h-screen border-r border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 flex-shrink-0 transition-colors duration-200">
 
-                {/* Logo + User Section */}
-                <div className="p-4 border-b flex items-center gap-3">
+                {/* লোগো ও ব্র্যান্ড সেকশন */}
+                <div className="px-6 py-5 border-b border-zinc-200 dark:border-zinc-800">
+                    <Link href="/" className="flex items-center gap-2">
+                        <div className="h-8 w-8 rounded-lg bg-indigo-600 flex items-center justify-center font-bold text-white text-lg">
+                            S
+                        </div>
+                        <span className="text-xl font-bold tracking-tight text-zinc-900 dark:text-white">SkillSwap</span>
+                    </Link>
+                </div>
+
+                {/* প্রোফাইল ইনফো সেকশন */}
+                <div className="p-4 mx-3 my-4 rounded-xl border border-zinc-100 dark:border-zinc-900 bg-zinc-50/50 dark:bg-zinc-900/40 flex items-center gap-3">
                     <Image
-                        src={user?.image || "/avatar.png"}
+                        src={user?.image || "https://i.pravatar.cc/150"}
                         width={40}
                         height={40}
-                        className="rounded-full object-cover border"
+                        className="rounded-full object-cover border border-indigo-500"
                         alt="user"
                     />
-
-                    <div className="flex flex-col">
-                        <span className="text-sm font-semibold">
+                    <div className="flex flex-col overflow-hidden">
+                        <span className="text-sm font-bold truncate">
                             {user?.name || "Guest User"}
                         </span>
-                        <span className="text-xs text-gray-500 capitalize">
+                        <span className="text-[10px] font-semibold text-indigo-600 dark:text-indigo-400 capitalize bg-indigo-50 dark:bg-indigo-950/50 px-2 py-0.5 rounded-md w-fit mt-0.5">
                             {role}
                         </span>
                     </div>
                 </div>
 
-                {/* Logo */}
-                <div className="px-4 py-3 border-b">
-                    <Image
-                        src="/m-logo.png"
-                        height={40}
-                        width={150}
-                        className="h-10 object-contain"
-                        alt="SkillSwap"
-                    />
-                </div>
-
-                {/* Nav Items */}
-                <div className="flex flex-col gap-1 p-3">
+                {/* নেভিগেশন লিংকসমূহ */}
+                <div className="flex flex-col gap-1.5 px-3 flex-1 overflow-y-auto">
                     {navItems.map((item) => (
-                        <Link key={item.label} href={item.link}>
+                        <Link key={item.label} href={item.link} className="w-full">
                             <button
-                                className="group flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-black transition"
+                                className="group flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-900 hover:text-indigo-600 dark:hover:text-indigo-400 transition-all duration-200"
                             >
-                                <item.icon className="size-5 text-gray-500 group-hover:text-black transition" />
+                                <item.icon className="size-5 text-zinc-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors" />
                                 {item.label}
                             </button>
                         </Link>
                     ))}
                 </div>
             </nav>
-
-            {/* Mobile Drawer */}
-            <Drawer.Backdrop>
-                <Drawer.Content placement="left">
-                    <Drawer.Dialog>
-
-                        <Drawer.CloseTrigger />
-
-                        <Drawer.Header>
-                            <Drawer.Heading>SkillSwap Menu</Drawer.Heading>
-                        </Drawer.Header>
-
-                        <Drawer.Body>
-                            <div className="flex items-center gap-3 mb-4">
-                                <Image
-                                    src={user?.image || "/avatar.png"}
-                                    width={40}
-                                    height={40}
-                                    className="rounded-full"
-                                    alt="user"
-                                />
-                                <div>
-                                    <p className="text-sm font-semibold">{user?.name}</p>
-                                    <p className="text-xs text-gray-500 capitalize">{role}</p>
-                                </div>
-                            </div>
-
-                            <nav className="flex flex-col gap-2">
-                                {navItems.map((item) => (
-                                    <Link key={item.label} href={item.link}>
-                                        <button
-                                            className="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm hover:bg-gray-100 transition"
-                                        >
-                                            <item.icon className="size-5" />
-                                            {item.label}
-                                        </button>
-                                    </Link>
-                                ))}
-                            </nav>
-                        </Drawer.Body>
-
-                    </Drawer.Dialog>
-                </Drawer.Content>
-            </Drawer.Backdrop>
-        </Drawer>
+        </>
     );
 }

@@ -8,12 +8,37 @@ import React, { useState } from "react";
 import { BiLogOut } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
 import { MdDashboard } from "react-icons/md";
-import { Menu, X } from "lucide-react";
+import { Menu, Moon, Sun, X } from "lucide-react";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
+
+  const [theme, setTheme] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("theme") || "dark";
+    }
+    return "dark";
+  });
+
+  // 🟢 থিম চেঞ্জ হলে HTML ট্যাগে ক্লাস পুশ করার ইফেক্ট
+  React.useEffect(() => {
+    const root = window.document.documentElement;
+    if (theme === "dark") {
+      root.classList.add("dark");
+      root.classList.remove("light");
+    } else {
+      root.classList.add("light");
+      root.classList.remove("dark");
+    }
+    localStorage.setItem("theme", theme);
+  }, [theme]);
+
+  // 🟢 থিম সুইচ করার ফাংশন
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === "dark" ? "light" : "dark"));
+  };
 
   // Better-Auth সেশন এবং ইউজার ডেটা রিড করা
   const { data: session } = authClient.useSession();
@@ -26,20 +51,22 @@ const Navbar = () => {
   }
 
   // লগআউট হ্যান্ডলার
-const handleSignOut = async () => {
-  try {
-    console.log("Logout clicked");
+  const handleSignOut = async () => {
+    try {
+      console.log("Logout clicked");
 
-    await authClient.signOut();
+      await authClient.signOut();
 
-    console.log("Logout success");
+      console.log("Logout success");
 
-    router.push("/");
-    router.refresh();
-  } catch (error) {
-    console.error("Sign out failed:", error);
-  }
-};
+      router.push("/");
+      router.refresh();
+    } catch (error) {
+      console.error("Sign out failed:", error);
+    }
+  };
+
+  
 
 
 
@@ -94,6 +121,24 @@ const handleSignOut = async () => {
             </li>
           </ul>
 
+          {/* 🟢 গ্লোবাল থিম সুইচ বাটন (এখানে বসিয়ে দাও) */}
+          <div className="hidden md:block">
+            <Button 
+              isIconOnly 
+              variant="light" 
+              radius="xl" 
+              onPress={toggleTheme}
+              className="text-zinc-400 hover:text-white"
+              aria-label="Toggle theme"
+            >
+              {theme === "dark" ? (
+                <Sun className="h-5 w-5 text-amber-500" />
+              ) : (
+                <Moon className="h-5 w-5 text-zinc-400" />
+              )}
+            </Button>
+          </div>
+
           {/* Docs: Logged-out Links (Login / Signup) */}
           {!user && (
             <div className="hidden items-center gap-4 md:flex text-sm font-medium">
@@ -133,7 +178,7 @@ const handleSignOut = async () => {
                   <Dropdown.Menu
                     aria-label="User Actions"
                     className="p-1.5"
-                 
+
                   >
                     {/* Dashboard Option */}
                     <Dropdown.Item key="dashboard" textValue="Dashboard" className="rounded-xl hover:bg-zinc-800">
@@ -187,6 +232,24 @@ const handleSignOut = async () => {
                 <Link href="/freelancers" onClick={() => setIsMenuOpen(false)} className="block py-2.5 text-zinc-400 hover:text-white">
                   Browse Freelancers
                 </Link>
+              </li>
+
+              {/* 🟢 এখানে মোবাইল থিম সুইচ বাটনটি বসিয়ে দাও */}
+              <li className="flex items-center justify-between py-2 px-1 text-zinc-400">
+                <span className="text-sm font-medium">Theme Mode</span>
+                <Button 
+                  isIconOnly 
+                  variant="flat" 
+                  radius="xl" 
+                  size="sm"
+                  onPress={toggleTheme}
+                >
+                  {theme === "dark" ? (
+                    <Sun className="h-4 w-4 text-amber-500" />
+                  ) : (
+                    <Moon className="h-4 w-4 text-zinc-400" />
+                  )}
+                </Button>
               </li>
 
               <li className="my-2 h-px bg-zinc-800" />

@@ -8,6 +8,11 @@ const nextConfig = {
         protocol: "https",
         hostname: "encrypted-tbn0.gstatic.com",
       },
+      // 🟢 নিচে নতুন ডোমেনটি যুক্ত করা হলো
+      {
+        protocol: "https",
+        hostname: "i.pravatar.cc",
+      },
     ],
   },
 };
