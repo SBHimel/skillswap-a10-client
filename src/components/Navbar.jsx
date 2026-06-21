@@ -4,7 +4,7 @@ import { authClient } from "@/lib/auth-client";
 import { Avatar, Button, Dropdown } from "@heroui/react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BiLogOut } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
 import { MdDashboard } from "react-icons/md";
@@ -15,15 +15,32 @@ const Navbar = () => {
   const router = useRouter();
   const pathname = usePathname();
 
-  const [theme, setTheme] = useState(() => {
-    if (typeof window !== "undefined") {
-      return localStorage.getItem("theme") || "dark";
-    }
-    return "dark";
-  });
+ 
+  const [mounted, setMounted] = useState(false);
 
-  // 🟢 থিম চেঞ্জ হলে HTML ট্যাগে ক্লাস পুশ করার ইফেক্ট
-  React.useEffect(() => {
+
+  const [theme, setTheme] = useState("dark");
+
+  useEffect(() => {
+    setMounted(true);
+    
+
+    const savedTheme = localStorage.getItem("theme") || "dark";
+    setTheme(savedTheme);
+
+    const root = window.document.documentElement;
+    if (savedTheme === "dark") {
+      root.classList.add("dark");
+      root.classList.remove("light");
+    } else {
+      root.classList.add("light");
+      root.classList.remove("dark");
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return; 
+
     const root = window.document.documentElement;
     if (theme === "dark") {
       root.classList.add("dark");
@@ -33,13 +50,12 @@ const Navbar = () => {
       root.classList.remove("dark");
     }
     localStorage.setItem("theme", theme);
-  }, [theme]);
+  }, [theme, mounted]);
 
   // 🟢 থিম সুইচ করার ফাংশন
   const toggleTheme = () => {
     setTheme((prev) => (prev === "dark" ? "light" : "dark"));
   };
-
   // Better-Auth সেশন এবং ইউজার ডেটা রিড করা
   const { data: session } = authClient.useSession();
   const user = session?.user;
@@ -102,7 +118,7 @@ const Navbar = () => {
             </Link>
           </div>
 
-          {/* Docs: Public Links (For Everyone) */}
+   
           <ul className="hidden items-center gap-6 md:flex text-sm font-medium">
             <li>
               <Link href="/" className={`transition-colors hover:text-white ${pathname === "/" ? "text-indigo-400" : "text-zinc-400"}`}>
@@ -124,19 +140,20 @@ const Navbar = () => {
           {/* 🟢 গ্লোবাল থিম সুইচ বাটন (এখানে বসিয়ে দাও) */}
           <div className="hidden md:block">
             <Button 
-              isIconOnly 
-              variant="light" 
-              radius="xl" 
-              onPress={toggleTheme}
-              className="text-zinc-400 hover:text-white"
-              aria-label="Toggle theme"
-            >
-              {theme === "dark" ? (
-                <Sun className="h-5 w-5 text-amber-500" />
-              ) : (
-                <Moon className="h-5 w-5 text-zinc-400" />
-              )}
-            </Button>
+  isIconOnly 
+  variant="light" 
+  radius="xl" 
+  onPress={toggleTheme}
+>
+  {/* 🟢 পেজ মাউন্ট হওয়ার আগে ফাঁকা দেখাবে, মাউন্ট হলে আসল আইকন লোড হবে */}
+  {!mounted ? (
+    <div className="h-5 w-5 bg-transparent" />
+  ) : theme === "dark" ? (
+    <Sun className="h-5 w-5 text-amber-500 animate-in fade-in duration-200" />
+  ) : (
+    <Moon className="h-5 w-5 text-zinc-400 animate-in fade-in duration-200" />
+  )}
+</Button>
           </div>
 
           {/* Docs: Logged-out Links (Login / Signup) */}
@@ -237,19 +254,21 @@ const Navbar = () => {
               {/* 🟢 এখানে মোবাইল থিম সুইচ বাটনটি বসিয়ে দাও */}
               <li className="flex items-center justify-between py-2 px-1 text-zinc-400">
                 <span className="text-sm font-medium">Theme Mode</span>
-                <Button 
-                  isIconOnly 
-                  variant="flat" 
-                  radius="xl" 
-                  size="sm"
-                  onPress={toggleTheme}
-                >
-                  {theme === "dark" ? (
-                    <Sun className="h-4 w-4 text-amber-500" />
-                  ) : (
-                    <Moon className="h-4 w-4 text-zinc-400" />
-                  )}
-                </Button>
+               <Button 
+  isIconOnly 
+  variant="light" 
+  radius="xl" 
+  onPress={toggleTheme}
+>
+  {/* 🟢 পেজ মাউন্ট হওয়ার আগে ফাঁকা দেখাবে, মাউন্ট হলে আসল আইকন লোড হবে */}
+  {!mounted ? (
+    <div className="h-5 w-5 bg-transparent" />
+  ) : theme === "dark" ? (
+    <Sun className="h-5 w-5 text-amber-500 animate-in fade-in duration-200" />
+  ) : (
+    <Moon className="h-5 w-5 text-zinc-400 animate-in fade-in duration-200" />
+  )}
+</Button>
               </li>
 
               <li className="my-2 h-px bg-zinc-800" />

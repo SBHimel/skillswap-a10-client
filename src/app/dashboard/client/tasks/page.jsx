@@ -2,12 +2,12 @@
 
 import React, { useState, useEffect } from 'react';
 import AddTaskModal from '@/components/dashboard/client/AddTaskModal';
-import EditTaskModal from '@/components/dashboard/client/EditTaskModal'; 
+import EditTaskModal from '@/components/dashboard/client/EditTaskModal';
 
-import { Card, Chip, Button } from "@heroui/react"; 
+import { Card, Chip, Button } from "@heroui/react";
 import { Edit2, Trash2, Check, X, ArrowUpRight } from "lucide-react";
 import { useRouter } from 'next/navigation';
-import { authClient } from "@/lib/auth-client"; 
+import { authClient } from "@/lib/auth-client";
 
 export default function ClientTasksPage() {
   const router = useRouter();
@@ -110,22 +110,22 @@ export default function ClientTasksPage() {
     try {
       const { data: token } = await authClient.token();
       const baseURL = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:5000";
-      
+
       const res = await fetch(`${baseURL}/proposals/reject/${proposalId}`, {
         method: "PATCH",
         headers: { authorization: `Bearer ${token?.token}` }
       });
-      
+
       if (res.ok) {
-        loadClientData(); 
+        loadClientData();
       }
     } catch (error) {
       console.error("Error rejecting proposal:", error);
     }
   };
 
-  const handleAcceptProposal = (proposalId) => {
-    router.push(`/payment/checkout?proposalId=${proposalId}`);
+  const handleAcceptProposal = (proposalId, taskId) => {
+    router.push(`/payment/checkout?proposalId=${proposalId}&taskId=${taskId}`);
   };
 
   return (
@@ -211,15 +211,42 @@ export default function ClientTasksPage() {
                           <div className="flex items-center gap-2">
                             <span className="font-bold text-base text-zinc-800 dark:text-zinc-200">{prop.freelancerName}</span>
                             <Chip size="sm" variant="dot" color="secondary">For: {prop.taskTitle}</Chip>
+
+                            {/* 🟢 ১. প্রপোজালের লাইভ স্ট্যাটাস চিপ */}
+                            <Chip
+                              size="sm"
+                              variant="flat"
+                              color={prop.status === "Accepted" ? "success" : prop.status === "Rejected" ? "danger" : "warning"}
+                            >
+                              {prop.status || "Pending"}
+                            </Chip>
                           </div>
                           <p className="text-sm text-zinc-600 dark:text-zinc-400 font-medium">Bid Amount: ${prop.budget} | Delivery: {prop.duration} Days</p>
                           <p className="text-sm text-zinc-400 italic bg-zinc-50 dark:bg-zinc-950 p-3 rounded-xl border border-zinc-100 dark:border-zinc-800/50 mt-2">"{prop.message}"</p>
                         </div>
+
                         <div className="flex md:flex-col lg:flex-row gap-2 self-end md:self-auto">
-                          <Button size="sm" color="danger" variant="flat" className="rounded-xl" onClick={() => handleRejectProposal(prop._id)}>
+
+                          {/* 🟢 ২. রিজেক্ট বাটন (লক সিস্টেম সহ) */}
+                          <Button
+                            size="sm"
+                            color="danger"
+                            variant="flat"
+                            className="rounded-xl"
+                            isDisabled={prop.status === "Rejected" || prop.status === "Accepted"} // লক কন্ডিশন
+                            onClick={() => handleRejectProposal(prop._id)}
+                          >
                             <X className="size-4 mr-1" /> Reject
                           </Button>
-                          <Button size="sm" className="bg-indigo-600 text-white rounded-xl shadow-md shadow-indigo-500/10" onClick={() => handleAcceptProposal(prop._id)}>
+
+                          {/* 🟢 ৩. এক্সেপ্ট বাটন (প্যারামিটারে taskId সহ এবং লক সিস্টেম) */}
+                          {/* 🟢 এক্সেপ্ট বাটন (প্যারামিটারে taskId সহ এবং লক সিস্টেম) */}
+                          <Button
+                            size="sm"
+                            className="bg-indigo-600 text-white rounded-xl shadow-md shadow-indigo-500/10"
+                            isDisabled={prop.status === "Rejected" || prop.status === "Accepted"} // লক কন্ডিশন
+                            onClick={() => handleAcceptProposal(prop._id, prop.taskId)} // এখানে taskId-ও পাস করলাম
+                          >
                             <Check className="size-4 mr-1" /> Accept & Pay <ArrowUpRight className="size-3" />
                           </Button>
                         </div>
@@ -233,16 +260,16 @@ export default function ClientTasksPage() {
         )}
       </div>
 
-     {/* 🟢 কন্ডিশনাল রেন্ডারিং যোগ করা হলো: শুধুমাত্র ওপেন হলেই মোডালটি মাউন্ট হবে */}
+      {/* 🟢 কন্ডিশনাল রেন্ডারিং যোগ করা হলো: শুধুমাত্র ওপেন হলেই মোডালটি মাউন্ট হবে */}
       {isEditOpen && selectedTask && (
-        <EditTaskModal 
-          isOpen={isEditOpen} 
+        <EditTaskModal
+          isOpen={isEditOpen}
           onClose={() => {
             setIsEditOpen(false);
             setSelectedTask(null); // ক্লোজ হলে স্টেট রিসেট
-          }} 
-          selectedTask={selectedTask} 
-          onTaskUpdated={handleTaskUpdatedInState} 
+          }}
+          selectedTask={selectedTask}
+          onTaskUpdated={handleTaskUpdatedInState}
         />
       )}
 

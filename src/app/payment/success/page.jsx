@@ -1,6 +1,8 @@
 import { stripe } from '@/lib/stripe';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
+import SuccessClient from '@/components/SuccessClient';
+ 
 
 export default async function Success({ searchParams }) {
   const { session_id } = await searchParams;
@@ -14,11 +16,23 @@ export default async function Success({ searchParams }) {
   if (session.status === 'open') return redirect('/');
 
   if (session.status === 'complete') {
-    // এখানে তোমার ব্যাকেন্ডের নতুন পেমেন্ট কনফার্মেশন API বা অ্যাকশন কল করবে
-    // যেমন: await confirmPayment({ sessionId: session_id, ...session.metadata })
+    
+    // 🟢 ব্যাকএন্ডে পাঠানোর জন্য ডাটা অবজেক্ট তৈরি
+    const sessionData = {
+      sessionId: session_id,
+      taskId: session.metadata.taskId,          
+      proposalId: session.metadata.proposalId,  
+      taskTitle: session.metadata.taskTitle,
+      freelancerName: session.metadata.freelancerName,
+      budget: session.amount_total / 100        
+    };
 
     return (
       <div className="max-w-md mx-auto mt-10 p-6 border rounded-3xl text-center bg-white shadow">
+        
+        {/* 🟢 ক্লায়েন্ট কম্পোনেন্টটি এখানে কল হলো এবং টোকেন ও ব্যাকএন্ডের কাজ সামলাবে */}
+        <SuccessClient sessionData={sessionData} />
+
         <h2 className="text-2xl font-bold text-green-6xl mb-4">Payment Successful! 🎉</h2>
         <div className="text-left space-y-2 my-4">
           <p><strong>Task:</strong> {session.metadata.taskTitle}</p>
