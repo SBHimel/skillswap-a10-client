@@ -15,16 +15,26 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
   },
-user: {
-  additionalFields: {
-    role: {
-      type: "string",
-      required: false,
-      defaultValue: "buyer",
-      input: true,
+  
+  
+  socialProviders: {
+    google: {
+      clientId: process.env.GOOGLE_CLIENT_ID || "placeholder", 
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "placeholder",
     },
   },
-},
+
+  user: {
+    additionalFields: {
+      role: {
+        type: "string",
+        required: false,
+        defaultValue: "client",
+        input: true, 
+      },
+    },
+  },
+  
   session: {
     cookieCache: {
       enabled: true,

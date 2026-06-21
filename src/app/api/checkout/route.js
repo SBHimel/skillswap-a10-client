@@ -1,3 +1,4 @@
+
 import { NextResponse } from "next/server";
 import { headers } from "next/headers";
 import { stripe } from "@/lib/stripe";
@@ -13,8 +14,8 @@ export async function POST(request) {
     });
     const user = userSession?.user;
 
-    // ক্লায়েন্ট সাইড থেকে বডি-তে dynamic data পাঠানো হবে
-    const { taskId, taskTitle, freelancerName, budget } = await request.json();
+    // 🟢 proposalId-সহ বডি ডাটা রিসিভ করছি
+    const { taskId, proposalId, taskTitle, freelancerName, budget } = await request.json();
 
     const session = await stripe.checkout.sessions.create({
       customer_email: user.email,
@@ -27,28 +28,26 @@ export async function POST(request) {
               name: taskTitle,
               description: `Payment for Freelancer: ${freelancerName}`,
             },
-            unit_amount: Number(budget) * 100, // সেন্ট-এ কনভার্ট করার জন্য (যেমন: $50 = 5000)
+            unit_amount: Math.round(Number(budget) * 100),
           },
           quantity: 1,
         },
       ],
       metadata: {
         taskId: taskId,
+        proposalId: proposalId, // 🟢 এটি যুক্ত হলো ডাটাবেজ ট্র্যাকিংয়ের জন্য
         taskTitle: taskTitle,
         freelancerName: freelancerName,
         clientEmail: user.email,
         amount: budget,
       },
-      mode: "payment", // 'subscription' বদলে 'payment' হবে
+      mode: "payment",
       success_url: `${origin}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/dashboard/client`,
     });
 
-    return NextResponse.json({ url: session.url }); // ক্লায়েন্টে URL রিটার্ন করা
+    return NextResponse.json({ url: session.url });
   } catch (err) {
-    return NextResponse.json(
-      { error: err.message },
-      { status: err.statusCode || 500 },
-    );
+    return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }

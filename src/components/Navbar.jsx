@@ -15,7 +15,7 @@ const Navbar = () => {
   const router = useRouter();
   const pathname = usePathname();
 
- 
+
   const [mounted, setMounted] = useState(false);
 
 
@@ -23,7 +23,7 @@ const Navbar = () => {
 
   useEffect(() => {
     setMounted(true);
-    
+
 
     const savedTheme = localStorage.getItem("theme") || "dark";
     setTheme(savedTheme);
@@ -39,7 +39,7 @@ const Navbar = () => {
   }, []);
 
   useEffect(() => {
-    if (!mounted) return; 
+    if (!mounted) return;
 
     const root = window.document.documentElement;
     if (theme === "dark") {
@@ -82,7 +82,7 @@ const Navbar = () => {
     }
   };
 
-  
+
 
 
 
@@ -118,8 +118,9 @@ const Navbar = () => {
             </Link>
           </div>
 
-   
-          <ul className="hidden items-center gap-6 md:flex text-sm font-medium">
+
+          <div>
+            <ul className="hidden items-center gap-6  md:flex text-sm font-medium">
             <li>
               <Link href="/" className={`transition-colors hover:text-white ${pathname === "/" ? "text-indigo-400" : "text-zinc-400"}`}>
                 Home
@@ -135,26 +136,28 @@ const Navbar = () => {
                 Browse Freelancers
               </Link>
             </li>
+            <Button className={'pl-16'}
+              isIconOnly
+              variant="light"
+              radius="xl"
+              onPress={toggleTheme}
+            >
+              {/* 🟢 পেজ মাউন্ট হওয়ার আগে ফাঁকা দেখাবে, মাউন্ট হলে আসল আইকন লোড হবে */}
+              {!mounted ? (
+                <div className="h-5 w-5 bg-transparent" />
+              ) : theme === "dark" ? (
+                <Sun className="h-5 w-5 text-amber-500 animate-in fade-in duration-200" />
+              ) : (
+                <Moon className="h-5 w-5 text-zinc-400 animate-in fade-in duration-200" />
+              )}
+            </Button>
           </ul>
 
-          {/* 🟢 গ্লোবাল থিম সুইচ বাটন (এখানে বসিয়ে দাও) */}
-          <div className="hidden md:block">
-            <Button 
-  isIconOnly 
-  variant="light" 
-  radius="xl" 
-  onPress={toggleTheme}
->
-  {/* 🟢 পেজ মাউন্ট হওয়ার আগে ফাঁকা দেখাবে, মাউন্ট হলে আসল আইকন লোড হবে */}
-  {!mounted ? (
-    <div className="h-5 w-5 bg-transparent" />
-  ) : theme === "dark" ? (
-    <Sun className="h-5 w-5 text-amber-500 animate-in fade-in duration-200" />
-  ) : (
-    <Moon className="h-5 w-5 text-zinc-400 animate-in fade-in duration-200" />
-  )}
-</Button>
           </div>
+          {/* 🟢 গ্লোবাল থিম সুইচ বাটন (এখানে বসিয়ে দাও) */}
+          
+            
+     
 
           {/* Docs: Logged-out Links (Login / Signup) */}
           {!user && (
@@ -254,21 +257,21 @@ const Navbar = () => {
               {/* 🟢 এখানে মোবাইল থিম সুইচ বাটনটি বসিয়ে দাও */}
               <li className="flex items-center justify-between py-2 px-1 text-zinc-400">
                 <span className="text-sm font-medium">Theme Mode</span>
-               <Button 
-  isIconOnly 
-  variant="light" 
-  radius="xl" 
-  onPress={toggleTheme}
->
-  {/* 🟢 পেজ মাউন্ট হওয়ার আগে ফাঁকা দেখাবে, মাউন্ট হলে আসল আইকন লোড হবে */}
-  {!mounted ? (
-    <div className="h-5 w-5 bg-transparent" />
-  ) : theme === "dark" ? (
-    <Sun className="h-5 w-5 text-amber-500 animate-in fade-in duration-200" />
-  ) : (
-    <Moon className="h-5 w-5 text-zinc-400 animate-in fade-in duration-200" />
-  )}
-</Button>
+                <Button
+                  isIconOnly
+                  variant="light"
+                  radius="xl"
+                  onPress={toggleTheme}
+                >
+                  {/* 🟢 পেজ মাউন্ট হওয়ার আগে ফাঁকা দেখাবে, মাউন্ট হলে আসল আইকন লোড হবে */}
+                  {!mounted ? (
+                    <div className="h-5 w-5 bg-transparent" />
+                  ) : theme === "dark" ? (
+                    <Sun className="h-5 w-5 text-amber-500 animate-in fade-in duration-200" />
+                  ) : (
+                    <Moon className="h-5 w-5 text-zinc-400 animate-in fade-in duration-200" />
+                  )}
+                </Button>
               </li>
 
               <li className="my-2 h-px bg-zinc-800" />

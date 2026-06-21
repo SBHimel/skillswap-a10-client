@@ -27,3 +27,17 @@ export const freelancerAPI = {
   getMyProposals: async () => 
     fetch(`${baseURL}/my-proposals`, { headers: await getHeaders() }).then(res => res.json()),
 };
+
+
+export const clientAPI = {
+  // ১. ক্লায়েন্টের নিজের কাজের ওপর আসা সব প্রপোজাল নিয়ে আসা
+  getClientProposals: async () => 
+    fetch(`${baseURL}/client-proposals`, { headers: await getHeaders() }).then(res => res.json()),
+
+  // ২. কোনো প্রপোজাল রিজেক্ট করা
+  rejectProposal: async (id) => 
+    fetch(`${baseURL}/proposals/reject/${id}`, { 
+      method: "PATCH", 
+      headers: await getHeaders() 
+    }).then(res => res.json()),
+};
