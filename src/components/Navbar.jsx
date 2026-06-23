@@ -1,6 +1,7 @@
 "use client";
 
 import { authClient } from "@/lib/auth-client";
+import { freelancerAPI } from "@/lib/api"; // 🟢 database theke data anar jonno api import
 import { Avatar, Button, Dropdown } from "@heroui/react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -9,22 +10,21 @@ import { BiLogOut } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
 import { MdDashboard } from "react-icons/md";
 import { Menu, Moon, Sun, X } from "lucide-react";
+import Image from "next/image";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
 
-
   const [mounted, setMounted] = useState(false);
-
-
   const [theme, setTheme] = useState("dark");
+
+  // 🟢 Database er real-time user data track korar jonno state
+  const [dbUser, setDbUser] = useState({ name: "", image: "" });
 
   useEffect(() => {
     setMounted(true);
-
-
     const savedTheme = localStorage.getItem("theme") || "dark";
     setTheme(savedTheme);
 
@@ -52,29 +52,36 @@ const Navbar = () => {
     localStorage.setItem("theme", theme);
   }, [theme, mounted]);
 
-  // 🟢 থিম সুইচ করার ফাংশন
   const toggleTheme = () => {
     setTheme((prev) => (prev === "dark" ? "light" : "dark"));
   };
-  // Better-Auth সেশন এবং ইউজার ডেটা রিড করা
+
   const { data: session } = authClient.useSession();
   const user = session?.user;
-  // console.log(session);
 
-  // ড্যাশবোর্ডের ভেতরে থাকলে নেভবার রেন্ডার হবে না
+  // 🟢 Session-er email pailei database theke updated chobi ebong nam niye ashbe
+  useEffect(() => {
+    if (user?.email) {
+      freelancerAPI.getProfile(user.email).then((data) => {
+        if (data) {
+          setDbUser({
+            name: data.name || user?.name || "Guest User",
+            image: data.image || user?.image || "https://i.pravatar.cc/150",
+          });
+        }
+      });
+    }
+  }, [user?.email]);
+
   if (pathname.includes("dashboard")) {
     return null;
   }
 
-  // লগআউট হ্যান্ডলার
   const handleSignOut = async () => {
     try {
       console.log("Logout clicked");
-
       await authClient.signOut();
-
       console.log("Logout success");
-
       router.push("/");
       router.refresh();
     } catch (error) {
@@ -82,13 +89,8 @@ const Navbar = () => {
     }
   };
 
-
-
-
-
   return (
     <div className="w-full">
-      {/* মার্কেটপ্লেস রিলেটেড টপ অ্যালার্ট বার (ই-কমার্স টেক্সট সরানো হয়েছে) */}
       <div className="bg-zinc-950 border-b border-zinc-800 p-1.5 text-center text-xs font-medium text-zinc-300">
         <marquee scrollamount="4">
           🚀 Welcome to SkillSwap Marketplace! Secure milestone tracking powered by Stripe. Post micro-tasks or apply as a freelancer today!
@@ -101,65 +103,69 @@ const Navbar = () => {
           {/* Brand Logo & Title */}
           <div className="flex items-center gap-4">
             <button
-              className="md:hidden text-zinc-400 hover:text-white"
+              className="md:hidden text-zinc-400 hover:text-white transition-colors p-1 rounded-lg hover:bg-zinc-800/50"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               aria-label="Toggle menu"
             >
               {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
 
-            <Link href="/">
-              <div className="flex items-center gap-2">
-                <div className="h-8 w-8 rounded-lg bg-indigo-600 flex items-center justify-center font-bold text-white text-lg">
-                  S
-                </div>
-                <span className="text-xl font-bold tracking-tight text-white">SkillSwap</span>
+            <Link href="/" className="group flex items-center gap-3 hover:opacity-95 transition-all duration-200">
+              <div className="relative h-10 w-10 flex-shrink-0 bg-gradient-to-tr from-zinc-900 to-zinc-800 dark:from-zinc-100 dark:to-zinc-200 p-0.5 rounded-xl shadow-inner border border-zinc-800/50 dark:border-zinc-200/50 flex items-center justify-center group-hover:scale-105 transition-transform duration-200">
+                <Image
+                  src="/s-lo.png" 
+                  alt="SkillSwap Logo"
+                  fill
+                  className="object-contain p-1.5"
+                  priority
+                />
+              </div>
+
+              <div className="flex flex-col justify-center select-none">
+                <span className="text-xl font-black tracking-tight text-white group-hover:text-indigo-400 transition-colors duration-200 font-sans leading-tight">
+                  SkillSwap
+                </span>
+                <span className="text-[9px] font-bold text-zinc-400 tracking-widest mt-0.5 block uppercase leading-none opacity-80">
+                  Freelance Micro-Task Platform
+                </span>
               </div>
             </Link>
           </div>
 
-
-          <div>
-            <ul className="hidden items-center gap-6  md:flex text-sm font-medium">
-            <li>
-              <Link href="/" className={`transition-colors hover:text-white ${pathname === "/" ? "text-indigo-400" : "text-zinc-400"}`}>
-                Home
-              </Link>
-            </li>
-            <li>
-              <Link href="/tasks" className={`transition-colors hover:text-white ${pathname === "/tasks" ? "text-indigo-400" : "text-zinc-400"}`}>
-                Browse Tasks
-              </Link>
-            </li>
-            <li>
-              <Link href="/freelancers" className={`transition-colors hover:text-white ${pathname === "/freelancers" ? "text-indigo-400" : "text-zinc-400"}`}>
-                Browse Freelancers
-              </Link>
-            </li>
-            <Button className={'pl-16'}
-              isIconOnly
-              variant="light"
-              radius="xl"
-              onPress={toggleTheme}
-            >
-              {/* 🟢 পেজ মাউন্ট হওয়ার আগে ফাঁকা দেখাবে, মাউন্ট হলে আসল আইকন লোড হবে */}
-              {!mounted ? (
-                <div className="h-5 w-5 bg-transparent" />
-              ) : theme === "dark" ? (
-                <Sun className="h-5 w-5 text-amber-500 animate-in fade-in duration-200" />
-              ) : (
-                <Moon className="h-5 w-5 text-zinc-400 animate-in fade-in duration-200" />
-              )}
-            </Button>
-          </ul>
-
+          <div className="pr-30">
+            <ul className="hidden items-center gap-6 md:flex text-sm font-medium">
+              <li>
+                <Link href="/" className={`transition-colors hover:text-white ${pathname === "/" ? "text-indigo-400" : "text-zinc-400"}`}>
+                  Home
+                </Link>
+              </li>
+              <li>
+                <Link href="/tasks" className={`transition-colors hover:text-white ${pathname === "/tasks" ? "text-indigo-400" : "text-zinc-400"}`}>
+                  Browse Tasks
+                </Link>
+              </li>
+              <li>
+                <Link href="/freelancers" className={`transition-colors hover:text-white ${pathname === "/freelancers" ? "text-indigo-400" : "text-zinc-400"}`}>
+                  Browse Freelancers
+                </Link>
+              </li>
+              <Button className={'pl-16'}
+                isIconOnly
+                variant="light"
+                radius="xl"
+                onPress={toggleTheme}
+              >
+                {!mounted ? (
+                  <div className="h-5 w-5 bg-transparent" />
+                ) : theme === "dark" ? (
+                  <Sun className="h-5 w-5 text-amber-500 animate-in fade-in duration-200" />
+                ) : (
+                  <Moon className="h-5 w-5 text-zinc-400 animate-in fade-in duration-200" />
+                )}
+              </Button>
+            </ul>
           </div>
-          {/* 🟢 গ্লোবাল থিম সুইচ বাটন (এখানে বসিয়ে দাও) */}
-          
-            
-     
 
-          {/* Docs: Logged-out Links (Login / Signup) */}
           {!user && (
             <div className="hidden items-center gap-4 md:flex text-sm font-medium">
               <Link href="/signin" className="text-zinc-400 hover:text-white transition-colors">
@@ -173,34 +179,29 @@ const Navbar = () => {
             </div>
           )}
 
-          {/* Docs: Private Links inside Dropdown (Logged-in Only) */}
           {user && (
             <div className="flex items-center gap-4">
               <Dropdown placement="bottom-end">
                 <Dropdown.Trigger className="cursor-pointer">
                   <Avatar size="sm" color="primary" className="transition-transform">
+                    {/* 🟢 user?.image er jaigay ekhon real-time dbUser.image fute uthbe */}
                     <Avatar.Image
                       referrerPolicy="no-referrer"
-                      alt={user?.name || "User Avatar"}
-                      src={user?.image}
+                      alt={dbUser.name || "User Avatar"}
+                      src={dbUser.image} 
                     />
-                    <Avatar.Fallback>{user?.name?.charAt(0) || "U"}</Avatar.Fallback>
+                    <Avatar.Fallback>{dbUser.name?.charAt(0) || "U"}</Avatar.Fallback>
                   </Avatar>
                 </Dropdown.Trigger>
 
                 <Dropdown.Popover className="bg-zinc-900 border border-zinc-800 text-zinc-200 rounded-2xl min-w-[220px]">
-                  {/* User Profile Header info */}
+                  {/* 🟢 Header-eo database er updated name fute uthbe */}
                   <div className="px-4 pt-3 pb-2 border-b border-zinc-800">
-                    <p className="text-sm font-semibold text-white">{user?.name}</p>
+                    <p className="text-sm font-semibold text-white">{dbUser.name}</p>
                     <p className="text-xs text-zinc-400 truncate">{user?.email}</p>
                   </div>
 
-                  <Dropdown.Menu
-                    aria-label="User Actions"
-                    className="p-1.5"
-
-                  >
-                    {/* Dashboard Option */}
+                  <Dropdown.Menu aria-label="User Actions" className="p-1.5">
                     <Dropdown.Item key="dashboard" textValue="Dashboard" className="rounded-xl hover:bg-zinc-800">
                       <Link className="flex items-center gap-2.5 w-full text-zinc-300 py-1" href={`/dashboard/${user?.role || "client"}`}>
                         <MdDashboard className="text-indigo-400 text-lg" />
@@ -208,7 +209,6 @@ const Navbar = () => {
                       </Link>
                     </Dropdown.Item>
 
-                    {/* Profile Option */}
                     <Dropdown.Item key="profile" textValue="Profile" className="rounded-xl hover:bg-zinc-800">
                       <Link className="flex items-center gap-2.5 w-full text-zinc-300 py-1" href="/profile">
                         <CgProfile className="text-emerald-400 text-lg" />
@@ -216,7 +216,6 @@ const Navbar = () => {
                       </Link>
                     </Dropdown.Item>
 
-                    {/* Logout Option (Fixed Action Trigger) */}
                     <Dropdown.Item
                       key="logout"
                       onPress={handleSignOut}
@@ -234,7 +233,7 @@ const Navbar = () => {
           )}
         </header>
 
-        {/* Mobile Dropdown Menu (Docs Compliant) */}
+        {/* Mobile Dropdown Menu */}
         {isMenuOpen && (
           <div className="border-t border-zinc-800 bg-zinc-950 md:hidden animate-in fade-in slide-in-from-top-2 duration-200">
             <ul className="flex flex-col gap-1 p-4 text-base font-medium">
@@ -254,16 +253,9 @@ const Navbar = () => {
                 </Link>
               </li>
 
-              {/* 🟢 এখানে মোবাইল থিম সুইচ বাটনটি বসিয়ে দাও */}
               <li className="flex items-center justify-between py-2 px-1 text-zinc-400">
                 <span className="text-sm font-medium">Theme Mode</span>
-                <Button
-                  isIconOnly
-                  variant="light"
-                  radius="xl"
-                  onPress={toggleTheme}
-                >
-                  {/* 🟢 পেজ মাউন্ট হওয়ার আগে ফাঁকা দেখাবে, মাউন্ট হলে আসল আইকন লোড হবে */}
+                <Button isIconOnly variant="light" radius="xl" onPress={toggleTheme}>
                   {!mounted ? (
                     <div className="h-5 w-5 bg-transparent" />
                   ) : theme === "dark" ? (

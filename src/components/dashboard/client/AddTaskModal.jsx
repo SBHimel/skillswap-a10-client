@@ -91,7 +91,7 @@ export default function AddTaskModal({ onTaskAdded }) {
                   name="title"
                   type="text"
                   label="Task Title"
-                  placeholder="Build a Next.js Dashboard"
+                  placeholder="Task Title"
                   variant="bordered"
                   radius="xl"
                   required // 🟢 'isRequired' এর বদলে শুধু 'required'
@@ -101,7 +101,7 @@ export default function AddTaskModal({ onTaskAdded }) {
                   name="category"
                   type="text"
                   label="Category"
-                  placeholder="Web Development"
+                  placeholder="Category"
                   variant="bordered"
                   radius="xl"
                   required // 🟢 জাস্ট 'required'
@@ -121,7 +121,7 @@ export default function AddTaskModal({ onTaskAdded }) {
                     name="budget"
                     type="number"
                     label="Budget (USD)"
-                    placeholder="500"
+                    placeholder="Budget (USD)"
                     variant="bordered"
                     radius="xl"
                     required // 🟢 জাস্ট 'required'
