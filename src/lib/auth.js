@@ -25,21 +25,42 @@ export const auth = betterAuth({
   },
 
   user: {
-    additionalFields: {
-      role: {
-        type: "string",
-        required: false,
-        defaultValue: "client",
-        input: true, 
-      },
+  additionalFields: {
+    role: {
+      type: "string",
+      required: false,
+      defaultValue: "client",
+      input: true, 
     },
+    // 🟢 ঠিক এখানে এই কমা ও নতুন ফিল্ডটি বসাও
+    isBlocked: {
+      type: "boolean",
+      required: false,
+      defaultValue: false,
+    }
   },
+},
   
-  session: {
+session: {
     cookieCache: {
       enabled: true,
       strategy: "jwt",
       maxAge: 60 * 24 * 60,
+    },
+  },
+  // 🟢 এই মাঝখানের জায়গায় হুকের কোডটুকু পেস্ট করে দাও
+  hooks: {
+    before: async (context) => {
+      if (context.path.includes("sign-in")) {
+        const body = context.requestBody;
+        if (!body || !body.email) return;
+
+        const dbUser = await db.collection("user").findOne({ email: body.email });
+
+        if (dbUser && dbUser.isBlocked === true) {
+          throw new Error("Your account has been blocked by the administrator.");
+        }
+      }
     },
   },
   plugins: [jwt()],

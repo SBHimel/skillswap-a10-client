@@ -82,3 +82,47 @@ export const clientAPI = {
       headers: await getHeaders(),
     }).then((res) => res.json()),
 };
+
+
+
+
+export const adminAPI = {
+  // ১. ওয়ান-পেজ ওভারভিউ স্ট্যাটস নিয়ে আসা
+  getStats: async () =>
+    fetch(`${baseURL}/admin/stats`, { headers: await getHeaders() }).then(
+      (res) => res.json()
+    ),
+
+  // ২. সব ইউজারের লিস্ট নিয়ে আসা
+  getUsers: async () =>
+    fetch(`${baseURL}/admin/users`, { headers: await getHeaders() }).then(
+      (res) => res.json()
+    ),
+
+  // ৩. কোনো ইউজারকে ব্লক বা আনব্লক করা (PATCH রিকোয়েস্ট)
+  toggleUserBlock: async (userId, isBlocked) =>
+    fetch(`${baseURL}/admin/users/${userId}/block`, {
+      method: "PATCH",
+      headers: await getHeaders(),
+      body: JSON.stringify({ isBlocked }), // বডিতে true/false পাঠাচ্ছি
+    }).then((res) => res.json()),
+
+  // ৪. সব টাস্কের লিস্ট নিয়ে আসা
+  getTasks: async () =>
+    fetch(`${baseURL}/admin/tasks`, { headers: await getHeaders() }).then(
+      (res) => res.json()
+    ),
+
+  // ৫. কোনো টাস্ক সেফটি রুল ভঙ্গের কারণে ডিলিট করা
+  deleteTask: async (taskId) =>
+    fetch(`${baseURL}/admin/tasks/${taskId}`, {
+      method: "DELETE",
+      headers: await getHeaders(),
+    }).then((res) => res.json()),
+
+  // ৬. সব Stripe ট্রানজেকশন হিস্ট্রি নিয়ে আসা
+  getTransactions: async () =>
+    fetch(`${baseURL}/admin/transactions`, { headers: await getHeaders() }).then(
+      (res) => res.json()
+    ),
+};

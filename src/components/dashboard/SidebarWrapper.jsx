@@ -10,7 +10,8 @@ import {
     Wallet,
     ClipboardList,
     PlusCircle,
-    CheckSquare
+    CheckSquare,
+    Users
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -34,9 +35,26 @@ export default function SidebarWrapper({ user, role }) {
             { icon: ClipboardList, label: "Manage Proposals", link: "/dashboard/client/proposals" },
         ],
         admin: [
-            { icon: ChartArea, label: "Overview", link: "/dashboard/admin" },
-            { icon: User2, label: "User Manage", link: "/dashboard/admin/users" },
-            { icon: Wallet, label: "All Transactions", link: "/dashboard/admin/transactions" },
+            {
+                icon: ChartArea,
+                label: "Overview",
+                link: "/dashboard/admin"
+            },
+            {
+                icon: Users, // User2 er jaygaye Users dile arektu formal dekhaye
+                label: "Manage Users",
+                link: "/dashboard/admin/users"
+            },
+            {
+                icon: ClipboardList, // 🟢 Doc-er requirement onujayi missing page-ti add kora holo
+                label: "Manage Tasks",
+                link: "/dashboard/admin/tasks"
+            },
+            {
+                icon: Wallet,
+                label: "Transactions History",
+                link: "/dashboard/admin/transactions"
+            },
         ],
     };
 
@@ -50,7 +68,7 @@ export default function SidebarWrapper({ user, role }) {
                 <Link href="/" className="group flex items-center gap-3 hover:opacity-95 transition-all duration-200">
                     <div className="relative h-9 w-9 flex-shrink-0 bg-gradient-to-tr from-zinc-900 to-zinc-800 dark:from-zinc-100 dark:to-zinc-200 p-0.5 rounded-xl shadow-inner border border-zinc-800/50 dark:border-zinc-200/50 flex items-center justify-center group-hover:scale-105 transition-transform duration-200">
                         <Image
-                            src="/s-lo.png" 
+                            src="/s-lo.png"
                             alt="SkillSwap Logo"
                             fill
                             className="object-contain p-1.5"
@@ -66,9 +84,9 @@ export default function SidebarWrapper({ user, role }) {
                         </span>
                     </div>
                 </Link>
-                
+
                 {/* Mobile menu close button */}
-                <Button 
+                <Button
                     className="md:hidden p-1 min-w-0 h-8 w-8 text-zinc-500 hover:text-zinc-800 dark:hover:text-white"
                     variant="light"
                     radius="xl"
@@ -101,14 +119,14 @@ export default function SidebarWrapper({ user, role }) {
         <>
             {/* 📱 Mobile Menu Trigger Button */}
             {/* 📱 Mobile Menu Trigger Button (Wow Gradient Look) */}
-<Button 
-  className="md:hidden fixed top-3 left-4 z-50 bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-semibold rounded-xl shadow-md flex items-center gap-2 px-3.5 py-1.5 h-9 border border-indigo-500/30 transition-all duration-200" 
-  size="sm"
-  onClick={() => setIsOpen(true)}
->
-  <Bars className="size-4 text-indigo-100" />
-  <span className="text-xs tracking-wide">Menu</span>
-</Button>
+            <Button
+                className="md:hidden fixed top-3 left-4 z-50 bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-semibold rounded-xl shadow-md flex items-center gap-2 px-3.5 py-1.5 h-9 border border-indigo-500/30 transition-all duration-200"
+                size="sm"
+                onClick={() => setIsOpen(true)}
+            >
+                <Bars className="size-4 text-indigo-100" />
+                <span className="text-xs tracking-wide">Menu</span>
+            </Button>
 
             {/* 📱 Mobile Drawer Sidebar Layout */}
             {isOpen && (
