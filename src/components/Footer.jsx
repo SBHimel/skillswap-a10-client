@@ -86,6 +86,7 @@ export default function Footer() {
         </div>
 
         {/* Dashboards (Extra Layout Safety) */}
+        
         <div>
           <h4 className="text-xs font-bold uppercase tracking-widest text-zinc-200 mb-4">Marketplace</h4>
           <ul className="space-y-2.5 text-sm">
