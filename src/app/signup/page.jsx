@@ -57,7 +57,7 @@ export default function SignUpPage() {
   const handleGoogleSignIn = async () => {
     await authClient.signIn.social({
       provider: "google",
-      callbackURL: "/", 
+      callbackURL: "/",
     });
   };
 
@@ -65,13 +65,13 @@ export default function SignUpPage() {
     <div className="flex items-center justify-center min-h-[90vh] p-4 sm:p-6 max-w-md mx-auto mt-6">
       {/* 🌟 WOW এলিমেন্ট */}
       <Surface className="w-full p-6 sm:p-8 border border-zinc-200/60 dark:border-zinc-800/80 rounded-[28px] bg-white dark:bg-zinc-950 shadow-2xl relative overflow-hidden transition-all duration-300">
-        
+
         {/* top gradient line */}
         <div className="absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"></div>
 
         <Form onSubmit={onSubmit} className="space-y-4">
           <Fieldset className="w-full">
-            
+
             {/* 🎯 টাইটেল */}
             <div className="space-y-1 mb-5">
               <Fieldset.Legend className="text-2xl font-black tracking-tight text-zinc-900 dark:text-zinc-50">
@@ -131,10 +131,9 @@ export default function SignUpPage() {
 
             {/* ⚙️ অ্যাকশন বাটনসমূহ (কাস্টম Tailwind লেআউট - কোনো Fieldset.Actions ঝামেলা নেই) */}
             <div className="mt-6 flex flex-col gap-4 w-full">
-              
-              <Button 
-                type="submit" 
-                isLoading={loading} 
+              <Button
+                type="submit"
+                isLoading={loading}
                 className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl py-2.5 shadow-md shadow-indigo-600/10 active:scale-[0.99] transition-all text-xs"
               >
                 Create Account
@@ -146,10 +145,10 @@ export default function SignUpPage() {
                 <div className="flex-grow border-t border-zinc-100 dark:border-zinc-900"></div>
               </div>
 
-              <Button 
-                onPress={handleGoogleSignIn} 
-                type="button" 
-                variant="bordered" 
+              <Button
+                onPress={handleGoogleSignIn}
+                type="button"
+                variant="bordered"
                 className="w-full rounded-xl font-bold border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-900/50 text-xs text-zinc-700 dark:text-zinc-300 transition-all active:scale-[0.99]"
               >
                 <svg className="size-4 mr-2 inline-block" viewBox="0 0 24 24">
@@ -164,8 +163,8 @@ export default function SignUpPage() {
               <div className="text-center pt-2 w-full">
                 <p className="text-xs text-zinc-500 dark:text-zinc-400 font-medium">
                   Already have an account?{" "}
-                  <Link 
-                    href="/signin" 
+                  <Link
+                    href="/signin"
                     className="text-indigo-500 hover:text-indigo-600 font-bold underline underline-offset-4 transition-colors"
                   >
                     Sign In
@@ -174,7 +173,7 @@ export default function SignUpPage() {
               </div>
 
             </div>
-        
+
           </Fieldset>
         </Form>
       </Surface>
