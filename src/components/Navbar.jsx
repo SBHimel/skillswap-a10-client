@@ -140,12 +140,12 @@ const Navbar = () => {
                 </Link>
               </li>
               <li>
-                <Link href="/tasks" className={`transition-colors hover:text-white ${pathname === "/tasks" ? "text-indigo-400" : "text-zinc-400"}`}>
+                <Link href="/browse-tasks" className={`transition-colors hover:text-white ${pathname === "/tasks" ? "text-indigo-400" : "text-zinc-400"}`}>
                   Browse Tasks
                 </Link>
               </li>
               <li>
-                <Link href="/freelancers" className={`transition-colors hover:text-white ${pathname === "/freelancers" ? "text-indigo-400" : "text-zinc-400"}`}>
+                <Link href="/browse-freelancers" className={`transition-colors hover:text-white ${pathname === "/browse-freelancers" ? "text-indigo-400" : "text-zinc-400"}`}>
                   Browse Freelancers
                 </Link>
               </li>
@@ -243,12 +243,12 @@ const Navbar = () => {
                 </Link>
               </li>
               <li>
-                <Link href="/tasks" onClick={() => setIsMenuOpen(false)} className="block py-2.5 text-zinc-400 hover:text-white">
+                <Link href="/browse-tasks" onClick={() => setIsMenuOpen(false)} className="block py-2.5 text-zinc-400 hover:text-white">
                   Browse Tasks
                 </Link>
               </li>
               <li>
-                <Link href="/freelancers" onClick={() => setIsMenuOpen(false)} className="block py-2.5 text-zinc-400 hover:text-white">
+                <Link href="/browse-freelancers" onClick={() => setIsMenuOpen(false)} className="block py-2.5 text-zinc-400 hover:text-white">
                   Browse Freelancers
                 </Link>
               </li>

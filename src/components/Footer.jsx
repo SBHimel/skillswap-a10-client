@@ -59,16 +59,16 @@ export default function Footer() {
           </p>
           {/* Social Media Links with the New X Icon */}
           <div className="flex items-center gap-3 pt-2">
-            <Link href="#" className="p-2 rounded-md bg-zinc-900 border border-zinc-800 hover:border-indigo-500 hover:text-white transition-colors">
+            <Link href="https://www.facebook.com/s.b.himel.669113" className="p-2 rounded-md bg-zinc-900 border border-zinc-800 hover:border-indigo-500 hover:text-white transition-colors">
               <FaFacebookF className="h-4 w-4" />
             </Link>
-            <Link href="#" className="p-2 rounded-md bg-zinc-900 border border-zinc-800 hover:border-indigo-500 hover:text-white transition-colors">
+            <Link href="https://www.linkedin.com/in/sbhimel/" className="p-2 rounded-md bg-zinc-900 border border-zinc-800 hover:border-indigo-500 hover:text-white transition-colors">
               <FaLinkedinIn className="h-4 w-4" />
             </Link>
-            <Link href="#" className="p-2 rounded-md bg-zinc-900 border border-zinc-800 hover:border-indigo-500 hover:text-white transition-colors">
+            <Link href="https://x.com/himel2nd" className="p-2 rounded-md bg-zinc-900 border border-zinc-800 hover:border-indigo-500 hover:text-white transition-colors">
               <FaXTwitter className="h-4 w-4" /> {/* ডাকনাম 'পাখি' বিদায়, এখানে অফিশিয়াল X আইকন */}
             </Link>
-            <Link href="#" className="p-2 rounded-md bg-zinc-900 border border-zinc-800 hover:border-indigo-500 hover:text-white transition-colors">
+            <Link href="https://github.com/SBHimel" className="p-2 rounded-md bg-zinc-900 border border-zinc-800 hover:border-indigo-500 hover:text-white transition-colors">
               <FaGithub className="h-4 w-4" />
             </Link>
           </div>
@@ -79,9 +79,9 @@ export default function Footer() {
           <h4 className="text-xs font-bold uppercase tracking-widest text-zinc-200 mb-4">Navigation</h4>
           <ul className="space-y-2.5 text-sm">
             <li><Link href="/" className="hover:text-white transition-colors">Home Page</Link></li>
-            <li><Link href="/tasks" className="hover:text-white transition-colors">Browse Tasks</Link></li>
-            <li><Link href="/freelancers" className="hover:text-white transition-colors">Browse Freelancers</Link></li>
-            <li><Link href="/login" className="hover:text-white transition-colors">Login / Register</Link></li>
+            <li><Link href="/browse-tasks" className="hover:text-white transition-colors">Browse Tasks</Link></li>
+            <li><Link href="/browse-freelancers" className="hover:text-white transition-colors">Browse Freelancers</Link></li>
+            <li><Link href="/signin" className="hover:text-white transition-colors">Login / Register</Link></li>
           </ul>
         </div>
 
@@ -91,7 +91,7 @@ export default function Footer() {
           <ul className="space-y-2.5 text-sm">
             <li><Link href="/dashboard/client" className="hover:text-white transition-colors">Client Space</Link></li>
             <li><Link href="/dashboard/freelancer" className="hover:text-white transition-colors">Freelancer Hub</Link></li>
-            <li><Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link></li>
+            <li><Link href="/terms-of-service" className="hover:text-white transition-colors">Terms of Service</Link></li>
             <li><Link href="/privacy-policy" className="hover:text-white transition-colors">Privacy Policy</Link></li>
           </ul>
         </div>
@@ -106,11 +106,11 @@ export default function Footer() {
             </div>
             <div className="flex items-center gap-3">
               <Phone className="h-4 w-4 text-zinc-500" />
-              <span>+880 1234-567890</span>
+              <span>+880 1840385793</span>
             </div>
             <div className="flex items-center gap-3">
               <Mail className="h-4 w-4 text-zinc-500" />
-              <span>support@skillswap.com</span> {/* অফিশিয়াল ইমেইল */}
+              <span>s.b.himel21@gmail.com</span> {/* অফিশিয়াল ইমেইল */}
             </div>
           </div>
         </div>
