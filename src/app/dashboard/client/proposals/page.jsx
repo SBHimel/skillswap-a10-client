@@ -45,6 +45,8 @@ export default function ManageProposalsPage() {
           proposalId: proposal._id,
           taskTitle: proposal.taskTitle,
           freelancerName: proposal.freelancerName || "Expert Freelancer",
+          // 🟢 ঠিক এখানে ফ্রিল্যান্সারের ইমেইলটা বডিতে যোগ করে দিলাম
+          freelancerEmail: proposal.freelancerEmail || proposal.email || "", 
           budget: proposal.budget,
         }),
       });

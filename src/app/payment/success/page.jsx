@@ -25,6 +25,7 @@ export default async function Success({ searchParams }) {
       proposalId: session.metadata.proposalId,  
       taskTitle: session.metadata.taskTitle,
       freelancerName: session.metadata.freelancerName,
+      freelancerEmail: session.metadata.freelancerEmail || "",
       budget: session.amount_total / 100        
     };
 

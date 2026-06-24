@@ -15,7 +15,7 @@ export async function POST(request) {
     const user = userSession?.user;
 
     // 🟢 proposalId-সহ বডি ডাটা রিসিভ করছি
-    const { taskId, proposalId, taskTitle, freelancerName, budget } = await request.json();
+    const { taskId, proposalId, taskTitle, freelancerName, freelancerEmail, budget } = await request.json();
 
     const session = await stripe.checkout.sessions.create({
       customer_email: user.email,
@@ -38,6 +38,7 @@ export async function POST(request) {
         proposalId: proposalId, // 🟢 এটি যুক্ত হলো ডাটাবেজ ট্র্যাকিংয়ের জন্য
         taskTitle: taskTitle,
         freelancerName: freelancerName,
+        freelancerEmail: freelancerEmail,
         clientEmail: user.email,
         amount: budget,
       },

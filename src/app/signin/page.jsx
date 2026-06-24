@@ -19,7 +19,21 @@ export default function SignInPage() {
     const user = Object.fromEntries(formData.entries());
 
     try {
-      // Better Auth ইমেইল লগইন
+      // 🟢 ১. Better Auth-এ পাঠানোর আগে ব্যাকএন্ডের API থেকে চেক করে নিচ্ছি ইউজার ব্লকড কি না
+      const checkRes = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/admin/users/check-status`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: user.email })
+      }).then(res => res.json());
+
+      // 🛑 যদি ডাটাবেজে ইউজার ব্লকড থাকে, তাহলে এখানেই লগইন আটকে যাবে
+      if (checkRes.isBlocked) {
+        setError("Your account has been blocked by the administrator.");
+        setLoading(false);
+        return;
+      }
+
+      // ২. ইউজার ব্লকড না হলে Better Auth ইমেইল লগইন স্বাভাবিকভাবে চলবে
       const { data, error: authError } = await authClient.signIn.email({
         email: user.email,
         password: user.password,
@@ -31,7 +45,7 @@ export default function SignInPage() {
         return;
       }
 
-      // 🟢 ডকস রুল: রোল অনুযায়ী ডাইনামিক রিডাইরেক্ট
+      // 🟢 ডকস রুল: রোল অনুযায়ী ডাইনামিক রিডাইরেক্ট
       const loggedInUser = data?.user;
       if (loggedInUser?.role === "freelancer") {
         router.push("/dashboard/freelancer");
