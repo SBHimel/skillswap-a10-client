@@ -101,11 +101,11 @@ export default function BrowseTasksPage() {
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="w-full pr-8 py-2.5 text-sm rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white focus:outline-none focus:border-indigo-500 appearance-none cursor-pointer transition-colors"
+            className="w-full pr-8 py-2.5 text-sm rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-zinc-200 dark:text-white focus:outline-none focus:border-indigo-500 appearance-none cursor-pointer transition-colors"
             style={{ paddingLeft: "3rem" }}
           >
             {categories.map((cat) => (
-              <option key={cat.key} value={cat.key} className="bg-white dark:bg-zinc-900">
+              <option key={cat.key} value={cat.key} className="bg-white dark:bg-zinc-900 dark:text-white">
                 {cat.label}
               </option>
             ))}
