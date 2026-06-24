@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { Spinner, Card, Button } from "@heroui/react";
-import { Search, Filter, Briefcase, DollarSign, Tag, ArrowRight } from "lucide-react";
+import { Search, Filter, Briefcase, DollarSign, Tag, ArrowRight, ArrowLeft } from "lucide-react";
 import { freelancerAPI } from "@/lib/api"; 
 import Link from "next/link"; 
 
@@ -19,16 +19,36 @@ export default function BrowseTasksPage() {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Challenge 1 States
+  // Challenge 1 States (তোমার অরিজিনাল সার্চ ও ফিল্টার স্টেট)
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
 
+  // Challenge 3 States (সার্ভার-সাইড পেজিনেশন স্টেট)
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const limit = 9; // প্রতি পেজে সর্বোচ্চ ৯টি টাস্ক
+
+  // সার্চ টেক্সট বা ক্যাটাগরি চেঞ্জ হলে কারেন্ট পেজ ১ নম্বরে রিসেট হবে (ক্যালকুলেশন সঠিক রাখার জন্য)
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, selectedCategory]);
+
+  // ডাটা ফেচ করার মূল ইফেক্ট (পেজ, সার্চ বা ক্যাটাগরি বদলালেই নতুন ডাটা লোড হবে)
   useEffect(() => {
     const fetchTasks = async () => {
       try {
         setLoading(true);
-        const data = await freelancerAPI.getAvailableTasks(); 
-        setTasks(Array.isArray(data) ? data : []);
+        // ব্যাকএন্ড এপিআই-তে প্যারামিটারগুলো পাস করা হচ্ছে
+        const data = await freelancerAPI.getAvailableTasks(
+          currentPage,
+          limit,
+          searchQuery,
+          selectedCategory
+        ); 
+        
+        // ব্যাকএন্ডের নতুন রেসপন্স অবজেক্ট ({ tasks, totalPages }) হ্যান্ডেল করা
+        setTasks(data?.tasks && Array.isArray(data.tasks) ? data.tasks : []);
+        setTotalPages(data?.totalPages || 1);
       } catch (error) {
         console.error("Tasks লোড করতে সমস্যা:", error);
       } finally {
@@ -36,8 +56,9 @@ export default function BrowseTasksPage() {
       }
     };
     fetchTasks();
-  }, []);
+  }, [currentPage, searchQuery, selectedCategory]);
 
+  // তোমার অরিজিনাল ক্লায়েন্ট-সাইড ফিল্টারিং সেফটি চেক
   const filteredTasks = tasks.filter((task) => {
     const isOpen = task.status?.toLowerCase() === "open" || !task.status;
     const matchesSearch = task.title?.toLowerCase().includes(searchQuery.toLowerCase());
@@ -48,7 +69,7 @@ export default function BrowseTasksPage() {
   return (
     <div className="space-y-6 px-2 sm:px-4 max-w-7xl mx-auto py-6">
       
-      {/* হেডার */}
+      {/* হেডার (তোমার অরিজিনাল ডিজাইন) */}
       <div className="bg-white dark:bg-zinc-900 p-6 rounded-2xl border border-zinc-100 dark:border-zinc-800 shadow-sm">
         <h1 className="text-2xl font-black tracking-tight text-zinc-900 dark:text-white">Browse Active Tasks</h1>
         <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">
@@ -56,7 +77,7 @@ export default function BrowseTasksPage() {
         </p>
       </div>
 
-      {/* 🔍 Search & Filter Controls */}
+      {/* 🔍 Search & Filter Controls (তোমার অরিজিনাল ইনপুট লেআউট) */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-white dark:bg-zinc-900 p-4 rounded-2xl border border-zinc-100 dark:border-zinc-800 shadow-sm">
         <div className="sm:col-span-2 relative flex items-center">
           <Search className="size-4 text-zinc-400 absolute left-4 pointer-events-none z-10" />
@@ -93,7 +114,7 @@ export default function BrowseTasksPage() {
         </div>
       </div>
 
-      {/* 💼 টাস্ক লিস্ট */}
+      {/* 💼 টাস্ক লিস্ট (তোমার নিজস্ব চমৎকার লিনিয়ার রো-ডিজাইন) */}
       <div className="space-y-4">
         {loading ? (
           <div className="flex justify-center py-16">
@@ -107,13 +128,12 @@ export default function BrowseTasksPage() {
         ) : (
           <div className="grid grid-cols-1 gap-4">
             {filteredTasks.map((task) => (
-              /* 🟢 এখানে ডাবল কার্ড রেন্ডার না করে ভেতরের অংশকে সাধারণ div বানিয়ে ক্লাস সেট করে দেওয়া হয়েছে */
               <Card key={task._id} className="border border-zinc-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-sm hover:border-indigo-500/30 transition-all duration-200 p-6">
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-5 w-full">
                   
                   <div className="space-y-2.5 max-w-2xl w-full">
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 border border-indigo-100 dark:border-indigo-900/40 flex items-center gap-1">
+                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 border border-indigo-100 dark:border-indigo-900/40 flex items-center gap-1 w-fit">
                         <Tag className="size-3" />
                         {task.category || "General"}
                       </span>
@@ -131,8 +151,8 @@ export default function BrowseTasksPage() {
                       <span className="text-2xl font-black tracking-tight">{task.budget}</span>
                     </div>
                     
-                    {/* 🟢 সরাসরি Link দিয়ে বাটনটি র‍্যাপ করা হলো যাতে ১০০% ক্লিক কাজ করে */}
-                    <Link href={`/browse-tasks/${task._id}`}>
+                    {/* পাস-হাইপারলিঙ্ক প্রোটেকশন সহ রিয়েল বাটন */}
+                    <Link href={`/browse-tasks/${task._id}`} passHref>
                       <Button
                         size="md"
                         className="bg-zinc-950 dark:bg-zinc-100 text-white dark:text-zinc-950 font-bold rounded-xl shadow-sm flex items-center gap-1.5 hover:scale-[1.02] transition-all text-xs"
@@ -149,6 +169,59 @@ export default function BrowseTasksPage() {
           </div>
         )}
       </div>
+
+      {/* 🟢 🔢 Challenge 3: নিখুঁত পেজিনেশন নেভিগেশন (যা সবসময় টাস্ক লিস্টের নিচে শো করবে) */}
+      {!loading && (
+        <div className="flex items-center justify-center gap-2 pt-6 border-t border-zinc-100 dark:border-zinc-800">
+          
+          {/* Previous Button */}
+          <Button
+            size="sm"
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+            className={`min-w-8 font-bold bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 rounded-xl ${
+              currentPage === 1 ? "opacity-40 cursor-not-allowed" : ""
+            }`}
+          >
+            <ArrowLeft className="size-3.5 mr-1" />
+            Prev
+          </Button>
+
+          {/* Dynamic Page Index Numbers (1, 2, 3...) */}
+          {Array.from({ length: totalPages }, (_, index) => {
+            const pageNum = index + 1;
+            return (
+              <Button
+                key={pageNum}
+                size="sm"
+                onClick={() => setCurrentPage(pageNum)}
+                className={`w-8 min-w-8 font-black rounded-xl transition-all ${
+                  currentPage === pageNum
+                    ? "bg-indigo-600 text-white shadow-md shadow-indigo-500/20"
+                    : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-700"
+                }`}
+              >
+                {pageNum}
+              </Button>
+            );
+          })}
+
+          {/* Next Button */}
+          <Button
+            size="sm"
+            disabled={currentPage === totalPages}
+            onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+            className={`min-w-8 font-bold bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 rounded-xl ${
+              currentPage === totalPages ? "opacity-40 cursor-not-allowed" : ""
+            }`}
+          >
+            Next
+            <ArrowRight className="size-3.5 ml-1" />
+          </Button>
+
+        </div>
+      )}
+
     </div>
   );
 }

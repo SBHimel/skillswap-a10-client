@@ -12,10 +12,19 @@ const getHeaders = async () => {
 
 export const freelancerAPI = {
   // ১. সব ওপেন কাজ নিয়ে আসা
-  getAvailableTasks: async () =>
-    fetch(`${baseURL}/available-tasks`, { headers: await getHeaders() }).then(
-      (res) => res.json(),
-    ),
+  getAvailableTasks: async (
+    page = 1,
+    limit = 9,
+    search = "",
+    category = "",
+  ) => {
+    return fetch(
+      `${baseURL}/available-tasks?page=${page}&limit=${limit}&search=${search}&category=${category}`,
+      {
+        headers: await getHeaders(),
+      },
+    ).then((res) => res.json());
+  },
 
   // ২. নতুন প্রপোজাল জমা দেওয়া
   submitProposal: async (data) =>
@@ -66,7 +75,6 @@ export const freelancerAPI = {
       headers: { ...(await getHeaders()), "Content-Type": "application/json" },
       body: JSON.stringify(data),
     }).then((res) => res.json()),
-    
 };
 
 export const clientAPI = {
@@ -84,20 +92,17 @@ export const clientAPI = {
     }).then((res) => res.json()),
 };
 
-
-
-
 export const adminAPI = {
   // ১. ওয়ান-পেজ ওভারভিউ স্ট্যাটস নিয়ে আসা
   getStats: async () =>
     fetch(`${baseURL}/admin/stats`, { headers: await getHeaders() }).then(
-      (res) => res.json()
+      (res) => res.json(),
     ),
 
   // ২. সব ইউজারের লিস্ট নিয়ে আসা
   getUsers: async () =>
     fetch(`${baseURL}/admin/users`, { headers: await getHeaders() }).then(
-      (res) => res.json()
+      (res) => res.json(),
     ),
 
   // ৩. কোনো ইউজারকে ব্লক বা আনব্লক করা (PATCH রিকোয়েস্ট)
@@ -111,7 +116,7 @@ export const adminAPI = {
   // ৪. সব টাস্কের লিস্ট নিয়ে আসা
   getTasks: async () =>
     fetch(`${baseURL}/admin/tasks`, { headers: await getHeaders() }).then(
-      (res) => res.json()
+      (res) => res.json(),
     ),
 
   // ৫. কোনো টাস্ক সেফটি রুল ভঙ্গের কারণে ডিলিট করা
@@ -123,7 +128,7 @@ export const adminAPI = {
 
   // ৬. সব Stripe ট্রানজেকশন হিস্ট্রি নিয়ে আসা
   getTransactions: async () =>
-    fetch(`${baseURL}/admin/transactions`, { headers: await getHeaders() }).then(
-      (res) => res.json()
-    ),
+    fetch(`${baseURL}/admin/transactions`, {
+      headers: await getHeaders(),
+    }).then((res) => res.json()),
 };

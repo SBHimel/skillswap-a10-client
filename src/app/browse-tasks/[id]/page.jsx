@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Spinner, Button,  Card } from "@heroui/react";
+import { Spinner, Button, Card } from "@heroui/react";
 import { DollarSign, Tag, Send, FileText, ArrowLeft, Mail, Lock } from "lucide-react";
 import { freelancerAPI } from "@/lib/api";
 import { useRouter, useParams } from "next/navigation";
@@ -18,26 +18,30 @@ export default function TaskDetailsPage() {
   const [proposalBid, setProposalBid] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  // 🔒 অথেনটিকেশন স্টেট (তোমার প্রজেক্টের Context, LocalStorage বা Redux অনুযায়ী এটা চেঞ্জ হবে)
-  // উদাহরণ হিসেবে এখানে ধরে নিচ্ছি ইউজার লগইন আছে কি না তা চেক করার জন্য:
+  // 🔒 অথেনটিকেশন স্টেট (তোমার অরিজিনাল স্টেট)
   const [isLoggedIn, setIsLoggedIn] = useState(false); 
-  const [userRole, setUserRole] = useState("guest"); // e.g., "freelancer", "client", "guest"
+  const [userRole, setUserRole] = useState("guest"); 
 
   useEffect(() => {
-    // এখানে তোমার অথেনটিকেশন চেক বসাতে পারো, যেমন:
-    const token = localStorage.getItem("token"); // বা তোমার প্রজেক্টের নিয়ম অনুযায়ী
-    const role = localStorage.getItem("role"); // যদি রোল সেভ করা থাকে
+    // তোমার অরিজিনাল টোকেন ও রোল চেকার
+    const token = localStorage.getItem("token"); 
+    const role = localStorage.getItem("role"); 
     
     if (token) {
       setIsLoggedIn(true);
-      setUserRole(role || "freelancer"); // টেস্টের জন্য ডিফল্ট ফ্রিল্যান্সার দিলাম
+      setUserRole(role || "freelancer"); 
     }
 
     const fetchSingleTask = async () => {
       try {
         setLoading(true);
-        const allTasks = await freelancerAPI.getAvailableTasks();
-        const foundTask = allTasks?.find((t) => t._id === taskId);
+        
+        // 🟢 ফিক্স: পেজিনেশনের লিমিট বাড়িয়ে সব ডাটা আনা হলো যাতে সব আইডি খুঁজে পাওয়া যায়
+        // এবং অবজেক্টের ভেতর থেকে .tasks অ্যারে বের করে নেওয়া হলো
+        const data = await freelancerAPI.getAvailableTasks(1, 999);
+        const tasksArray = data?.tasks && Array.isArray(data.tasks) ? data.tasks : (Array.isArray(data) ? data : []);
+        
+        const foundTask = tasksArray.find((t) => t._id === taskId);
         
         if (foundTask) {
           setTask(foundTask);
@@ -58,7 +62,6 @@ export default function TaskDetailsPage() {
   const handleProposalSubmit = async (e) => {
     e.preventDefault();
     
-    // সাবমিট করার আগেও আরেকবার সিকিউরিটি চেক
     if (!isLoggedIn || userRole !== "freelancer") {
       alert("Only logged in freelancers can submit proposals!");
       return;
@@ -124,7 +127,7 @@ export default function TaskDetailsPage() {
         {/* বাম পাশ: সবার জন্য উন্মুক্ত টাস্ক ডেসক্রিপশন */}
         <div className="md:col-span-2 space-y-6">
           <Card className="border border-zinc-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-sm p-6">
-            <Card className="p-0 space-y-4">
+            <div className="p-0 space-y-4"> {/* 🟢 ফিক্স: ভেতরের Card ডাবল রেন্ডার বাদ দিয়ে div করা হলো */}
               <div className="flex flex-wrap items-center gap-2">
                 <span className="px-3 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 border border-indigo-100 dark:border-indigo-900/40 flex items-center gap-1 w-fit">
                   <Tag className="size-3" />
@@ -151,14 +154,14 @@ export default function TaskDetailsPage() {
                 <Mail className="size-3.5 text-zinc-400" />
                 <span>Client Contact: {task.clientEmail}</span>
               </div>
-            </Card>
+            </div>
           </Card>
         </div>
 
         {/* ডান পাশ: বাজেট এবং কন্ডিশনাল প্রপোজাল ফর্ম */}
         <div className="space-y-6">
           <Card className="border border-zinc-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-sm p-6 sticky top-6">
-            <Card className="p-0 space-y-5">
+            <div className="p-0 space-y-5"> {/* 🟢 ফিক্স: ভেতরের Card ডাবল রেন্ডার বাদ দিয়ে div করা হলো */}
               
               <div className="text-center bg-emerald-50/50 dark:bg-emerald-950/10 border border-emerald-100/50 dark:border-emerald-900/30 rounded-xl p-4">
                 <p className="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">Client Budget</p>
@@ -168,7 +171,7 @@ export default function TaskDetailsPage() {
                 </div>
               </div>
 
-              {/* 🔒 কন্ডিশনাল রেন্ডারিং: লগইন করা ফ্রিল্যান্সার হলে ফর্ম দেখাবে, নাহলে ওয়ার্নিং */}
+              {/* 🔒 কন্ডিশনাল রেন্ডারিং */}
               {isLoggedIn && userRole === "freelancer" ? (
                 <form onSubmit={handleProposalSubmit} className="space-y-4">
                   <h3 className="text-xs font-bold text-zinc-900 dark:text-white uppercase tracking-wider flex items-center gap-1.5">
@@ -211,7 +214,6 @@ export default function TaskDetailsPage() {
                   </Button>
                 </form>
               ) : (
-                /* 🚫 লগইন না থাকলে এই কার্ডটি দেখাবে */
                 <div className="text-center p-4 bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/40 rounded-xl space-y-3">
                   <Lock className="size-5 text-amber-600 dark:text-amber-500 mx-auto" />
                   <p className="text-xs text-amber-700 dark:text-amber-400 font-medium leading-relaxed">
@@ -225,7 +227,7 @@ export default function TaskDetailsPage() {
                 </div>
               )}
 
-            </Card>
+            </div>
           </Card>
         </div>
 
