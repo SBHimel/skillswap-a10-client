@@ -28,12 +28,12 @@ export default function BrowseTasksPage() {
   const [totalPages, setTotalPages] = useState(1);
   const limit = 9; // প্রতি পেজে সর্বোচ্চ ৯টি টাস্ক
 
-  // সার্চ টেক্সট বা ক্যাটাগরি চেঞ্জ হলে কারেন্ট পেজ ১ নম্বরে রিসেট হবে (ক্যালকুলেশন সঠিক রাখার জন্য)
+
   useEffect(() => {
     setCurrentPage(1);
   }, [searchQuery, selectedCategory]);
 
-  // ডাটা ফেচ করার মূল ইফেক্ট (পেজ, সার্চ বা ক্যাটাগরি বদলালেই নতুন ডাটা লোড হবে)
+
   useEffect(() => {
     const fetchTasks = async () => {
       try {
