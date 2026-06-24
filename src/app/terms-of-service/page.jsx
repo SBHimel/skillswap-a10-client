@@ -6,6 +6,7 @@ import { ShieldCheck, Scale, FileText, UserCheck, AlertTriangle, ArrowLeft } fro
 import Link from "next/link";
 
 export default function TermsOfServicePage() {
+    
   const currentYear = new Date().getFullYear();
 
   return (
