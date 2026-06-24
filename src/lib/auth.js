@@ -47,6 +47,9 @@ session: {
       strategy: "jwt",
       maxAge: 60 * 24 * 60,
     },
+    user: {
+      fields: ["id", "name", "email", "image", "role", "isBlocked"],
+    },
   },
   // 🟢 এই মাঝখানের জায়গায় হুকের কোডটুকু পেস্ট করে দাও
   hooks: {

@@ -38,7 +38,7 @@ export default function Banner() {
         <div className="mt-10 flex flex-col sm:flex-row items-center gap-4 w-full justify-center sm:w-auto">
           
           {/* Post a Task (For Clients) */}
-          <Link href="#" className="w-full sm:w-auto">
+          <Link href="/dashboard/client/post-task" className="w-full sm:w-auto">
             <Button 
               className="w-full sm:w-52 bg-white text-black font-bold h-12 text-sm shadow-xl rounded-xl flex items-center justify-center gap-2 transition-all duration-300 hover:bg-zinc-200 hover:scale-[1.02] active:scale-[0.98]"
             >
@@ -47,7 +47,7 @@ export default function Banner() {
           </Link>
 
           {/* Browse Tasks (For Freelancers) */}
-          <Link href="#" className="w-full sm:w-auto">
+          <Link href="/browse-tasks" className="w-full sm:w-auto">
             <Button 
               className="w-full sm:w-52 bg-zinc-800 border border-zinc-700 font-bold h-12 text-sm text-white rounded-xl flex items-center justify-center gap-2 transition-all duration-300 hover:bg-zinc-700 hover:border-zinc-500 hover:scale-[1.02] active:scale-[0.98]"
             >

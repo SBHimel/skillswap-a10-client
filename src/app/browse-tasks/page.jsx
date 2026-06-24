@@ -15,6 +15,7 @@ const categories = [
   { key: "Other", label: "Other" },
 ];
 
+
 export default function BrowseTasksPage() {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
