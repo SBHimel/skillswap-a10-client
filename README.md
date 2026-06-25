@@ -1,36 +1,79 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 🚀 SkillSwap - Client Application
 
-## Getting Started
+<div align="center">
+  <a href="https://your-vercel-live-link.vercel.app"><strong>🔗 View Live Website</strong></a>
+</div>
+<br>
 
-First, run the development server:
+<div align="center">
+  <img src="https://img.shields.io/badge/Next.js-black?style=for-the-badge&logo=next.js&logoColor=white" alt="Next.js" />
+  <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React" />
+  <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS" />
+  <img src="https://img.shields.io/badge/HeroUI-000000?style=for-the-badge&logo=figma&logoColor=white" alt="HeroUI" />
+  <img src="https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white" alt="Vercel" />
+</div>
 
-```bash
+## 📖 Project Purpose
+**SkillSwap** is a modern, highly responsive skill-sharing and freelancing platform. This client-side application serves as the interactive frontend, allowing users to seamlessly switch between finding freelance talent and offering their own skills. It features dynamic role-based routing, robust authentication, and a premium user interface designed for maximum engagement.
+
+## ✨ Key Features
+* **🔒 Secure Authentication:** Powered by Better Auth, supporting both Email/Password and Google OAuth login methods.
+* **🎭 Role-Based Access Control (RBAC):** Dynamic dashboards and private routes tailored specifically for `freelancer`, `client`, and `admin` roles.
+* **🛡️ Protected Routes & Session Persistence:** Custom handlers ensure private dashboards never crash or lose state upon page reloads.
+* **🛑 Real-time Account Status:** Immediate interception of blocked users right at the sign-in phase, preventing unauthorized access.
+* **🎨 Premium UI/UX Layout:** Built with HeroUI and Tailwind CSS, featuring smooth transitions, aesthetic glass-morphism inputs, clean colors, proper text spacing, and a fully responsive layout for mobile, tablet, and desktop screens.
+* **🔔 Interactive Error Handling:** Beautiful, user-friendly error messages across all forms, input fields, and router paths.
+
+## 🛠️ Tech Stack & NPM Packages
+* **Framework:** Next.js (App Router)
+* **UI Components:** `@heroui/react`
+* **Styling:** Tailwind CSS (`tailwindcss`)
+* **Icons:** `lucide-react`
+* **Authentication:** `@better-auth/react`
+
+## 🔐 Environment Variables (.env.local)
+All frontend secret keys are kept safe. To run this project locally, create a `.env.local` file in the root directory and add the following secure keys:
+
+```env
+# Better Auth Configuration
+BETTER_AUTH_URL=http://localhost:3000
+BETTER_AUTH_SECRET=your_super_secret_key
+
+# Google OAuth Credentials
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+
+# Backend Server URL
+NEXT_PUBLIC_SERVER_URL=http://localhost:5000
+
+🚀 Run Locally
+Follow these steps to run the client-side application on your local machine:
+
+1. Clone the repository:
+
+Bash
+git clone <your-github-repo-link>
+
+
+2. Navigate to the client folder:
+
+Bash
+cd skillswap-client
+
+
+3. Install dependencies:
+
+Bash
+npm install
+
+
+4. Start the development server:
+
+Bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+5. Open your browser: Navigate to http://localhost:3000
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+শুধু পেস্ট করার পর **`https://your-vercel-live-link.vercel.app`** এর জায়গায় তোমার আসল লাইভ লিংকটা
