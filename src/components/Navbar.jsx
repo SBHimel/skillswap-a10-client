@@ -132,8 +132,8 @@ const Navbar = () => {
             </Link>
           </div>
 
-          <div className="pr-30">
-            <ul className="hidden items-center gap-6 md:flex text-sm font-medium">
+          <div className="pr-27">
+            <ul className="hidden items-center gap-4 md:flex text-sm font-medium">
               <li>
                 <Link href="/" className={`transition-colors hover:text-white ${pathname === "/" ? "text-indigo-400" : "text-zinc-400"}`}>
                   Home
