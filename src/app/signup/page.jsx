@@ -5,11 +5,13 @@ import { Button, Fieldset, Form, Input, Label, Surface, Select, ListBox, TextFie
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import React, { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 
 export default function SignUpPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -106,10 +108,37 @@ export default function SignUpPage() {
                 <Input placeholder="john@example.com" variant="flat" className="rounded-xl overflow-hidden border border-zinc-200/60 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/30 text-sm focus-within:border-indigo-500 transition-colors" />
               </TextField>
 
-              <TextField isRequired name="password" type="password" className="w-full">
-                <Label className="text-[11px] font-black uppercase tracking-wider text-zinc-400 dark:text-zinc-500 mb-1">Password</Label>
-                <Input placeholder="At least 6 chars, 1 Upper, 1 Lower" variant="flat" className="rounded-xl overflow-hidden border border-zinc-200/60 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/30 text-sm focus-within:border-indigo-500 transition-colors" />
-              </TextField>
+              <TextField isRequired name="password" className="w-full">
+  <Label className="text-[11px] font-black uppercase tracking-wider text-zinc-400 dark:text-zinc-500 mb-1">
+    Password
+  </Label>
+  {/* 🟢 flex এবং items-center দিয়ে ইনপুট ও বাটনকে পাশাপাশি আনা হয়েছে */}
+  <div className="flex items-center gap-2 w-full">
+    
+    {/* ইনপুট বক্সের কন্টেইনার */}
+    <div className="flex-1">
+      <Input
+        // 🟢 এখানে স্টেট অনুযায়ী টাইপ চেঞ্জ হবে (text অথবা password)
+        type={showPassword ? "text" : "password"}
+        placeholder="At least 6 chars, 1 Upper, 1 Lower"
+        variant="flat"
+        className="w-full rounded-xl border border-zinc-200/60 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/30 text-sm focus-within:border-indigo-500 transition-colors"
+      />
+    </div>
+
+    {/* 🎯 চোখের বাটনটির জন্য নির্দিষ্ট সাইজের (w-11 h-11) ডিভ */}
+    <div className="w-11 h-11 flex items-center justify-center flex-shrink-0">
+      <button
+        type="button"
+        onClick={() => setShowPassword(!showPassword)}
+        className="w-full h-full flex items-center justify-center rounded-xl bg-zinc-50/50 dark:bg-zinc-900/30 border border-zinc-200/60 dark:border-zinc-800 text-zinc-400 dark:text-zinc-500 hover:text-indigo-400 transition-all duration-200 focus:outline-none cursor-pointer"
+      >
+        {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+      </button>
+    </div>
+
+  </div>
+</TextField>
 
               {/* 🟢 রোল ড্রপডাউন */}
               <div className="w-full flex flex-col">
