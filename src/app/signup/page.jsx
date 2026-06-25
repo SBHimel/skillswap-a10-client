@@ -21,6 +21,7 @@ export default function SignUpPage() {
     const user = Object.fromEntries(formData.entries());
 
     // 🟢 পাসওয়ার্ড ভ্যালিডেশন
+    
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z]).{6,}$/;
     if (!passwordRegex.test(user.password)) {
       setError("Password must be at least 6 characters long, containing at least one uppercase and one lowercase letter.");
